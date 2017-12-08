@@ -1,5 +1,4 @@
-import * as firebase from 'firebase';
-import Auth from './auth';
+import firebase from 'react-native-firebase';
 
 const FireAuth = class {
   user = null;
@@ -9,10 +8,6 @@ const FireAuth = class {
   onEmailVerified = null;
   onLogin = null;
   onError = null;
-
-  init(googleConfig) {
-    Auth.Google.configure(googleConfig);
-  }
 
   setup = (onLogin, onUserChange, onLogout, onEmailVerified, onError) => {
     this.onUserChange = onUserChange;
@@ -90,24 +85,6 @@ const FireAuth = class {
 
   resendVerification = () => {
     this.user.sendEmailVerification();
-  }
-
-  facebookLogin = (permissions) => {
-    Auth.Facebook.login(permissions)
-      .then((token) => (
-        firebase.auth()
-          .signInWithCredential(firebase.auth.FacebookAuthProvider.credential(token))
-      ))
-      .catch((err) => this.onError && this.onError(err));
-  }
-
-  googleLogin = () => {
-    Auth.Google.login()
-      .then((token) => (
-        firebase.auth()
-          .signInWithCredential(firebase.auth.GoogleAuthProvider.credential(null, token))
-      ))
-      .catch((err) => this.onError && this.onError(err));
   }
 
   logout = () => {
